@@ -1,0 +1,94 @@
+<html>
+<head>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+	<style>
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+		    <h1>HomeWork</h1>
+		    <p class="lead">Add projects, register time and invoice your customers - for free.</p>
+		</div>
+		<table class="table table-bordered" data-bind="visible: registrations().length > 0">
+		    <thead>
+		        <tr>
+		            <th style="width: 33%;"></th>
+		            <th>Mon</th>
+		            <th>Tue</th>
+		            <th>Wed</th>
+		            <th>Thu</th>
+		            <th>Fri</th>
+		            <th class="text-muted">Sat</th>
+		            <th class="text-muted">Sun</th>
+		        </tr>
+		    </thead>
+		    <tbody data-bind="foreach: registrations">
+		        <tr>
+		            <td>
+		                <input type="text" placeholder="Project name" class="form-control" data-bind="value: Name" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Mon" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Tue" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Wed" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Thu" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Fri" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Sat" />
+		            </td>
+		            <td>
+		                <input type="text" class="form-control" data-bind="value: Sun" />
+		            </td>
+		        </tr>
+		    </tbody>
+		</table>
+		<div class="controls">
+		    <a href="#" class="btn btn-default" data-bind="click: addProject">Add project</a>
+		    <a href="#" class="btn btn-success" data-bind="click: save, visible: registrations().length > 0">Save</a>
+		</div>
+	</div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+
+    <script type="text/javascript">
+    (function() {
+
+        function ViewModel() {
+            var self = this;
+            self.registrations = ko.observableArray();
+
+            self.addProject = function() {
+                self.registrations.push({ Name: '', Mon: '', Tue: '', Wed: '', Thu: '', Fri: '', Sat: '', Sun: '' });
+            };
+
+            self.save = function () {
+                var data = {
+                    registrations: self.registrations()
+                };
+                $.post('/api/registrations', data);
+            };
+
+            $.getJSON('/api/registrations/', function(result) {
+                self.registrations(result);
+            });
+        };
+
+        ko.applyBindings(new ViewModel());
+
+    })();
+	</script>
+
+</body>
+</html>
