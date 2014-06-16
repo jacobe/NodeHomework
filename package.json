@@ -2,6 +2,7 @@
   "dependencies": {
     "body-parser": "*",
     "express": "*",
-    "moment": "^2.7.0"
+    "moment": "^2.7.0",
+    "nstore": "*"
   }
 }
