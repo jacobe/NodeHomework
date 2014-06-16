@@ -13,7 +13,7 @@
 		    <p class="lead">Add projects, register time and invoice your customers - for free.</p>
 		</div>
 		<form class="form-horizontal" role="form">
-		<table class="table table-bordered" data-bind="visible: registrations().length > 0">
+		<table class="table table-bordered">
 		    <thead>
 		        <tr>
 		            <th style="width: 33%;" class="form-group">
@@ -99,7 +99,7 @@
 
             self.save = function () {
                 var data = {
-                	startDate: self.startDate().toJSON(),
+                	startDate: self.startDate().toISOString(),
                     registrations: self.registrations()
                 };
                 $.post('/api/registrations', data);
@@ -116,13 +116,13 @@
             };
 
             self.startDate.subscribe(function(date) {
-	            $.getJSON('/api/registrations?date=' + date.toJSON(),
+	            $.getJSON('/api/registrations?date=' + date.toISOString(),
 	            	function(result) {
     	            	self.registrations(result);
         	    	});
 	        });
 
-	        self.startDate(moment().startOf('week'));
+	        self.startDate(moment().startOf('isoweek'));
         };
 
         var vm = new ViewModel();
