@@ -1,8 +1,9 @@
 <html>
 <head>
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/datepicker3.css" />
 	<style>
-
+	.toEndDateLabel { position: absolute; left:-7px; }
 	</style>
 </head>
 <body>
@@ -11,10 +12,20 @@
 		    <h1>HomeWork</h1>
 		    <p class="lead">Add projects, register time and invoice your customers - for free.</p>
 		</div>
+		<form class="form-horizontal" role="form">
 		<table class="table table-bordered" data-bind="visible: registrations().length > 0">
 		    <thead>
 		        <tr>
-		            <th style="width: 33%;"></th>
+		            <th style="width: 33%;" class="form-group">
+		            	<label class="control-label col-sm-4" for="startDate">Date range:</label>
+		            	<div class="col-sm-4">
+				            <input id="startDate" type="text" class="form-control datepicker" data-bind="value: startDate" />
+				        </div>
+			            <div class="col-sm-4">
+			            	<label class="toEndDateLabel control-label">to</label>
+		            		<input type="text" class="form-control" data-bind="value: endDate" readonly />
+		            	</div>
+		            </th>
 		            <th>Mon</th>
 		            <th>Tue</th>
 		            <th>Wed</th>
@@ -57,16 +68,20 @@
 		    <a href="#" class="btn btn-default" data-bind="click: addProject">Add project</a>
 		    <a href="#" class="btn btn-success" data-bind="click: save, visible: registrations().length > 0">Save</a>
 		</div>
+		</form>
 	</div>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+	<script src="/js/bootstrap-datepicker.js"></script>
 
     <script type="text/javascript">
     (function() {
 
         function ViewModel() {
             var self = this;
+            self.startDate = ko.observable();
+            self.endDate = ko.observable();
             self.registrations = ko.observableArray();
 
             self.addProject = function() {
@@ -86,6 +101,10 @@
         };
 
         ko.applyBindings(new ViewModel());
+
+        $('.datepicker').datepicker({
+        	autoclose: true
+        });
 
     })();
 	</script>

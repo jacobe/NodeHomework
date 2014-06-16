@@ -3,11 +3,12 @@ var bodyParser = require('body-parser');
 
 var app = express();
 app.use(bodyParser.urlencoded());
+app.use(express.static(__dirname + '/public'));
 
 var registrations = [];
 
 app.get('/', function(req, res) {
-	res.sendfile('index.html');
+	res.sendfile('html/index.html');
 });
 
 app.get('/api/registrations', function(req, res) {
