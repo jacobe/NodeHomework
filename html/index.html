@@ -17,14 +17,16 @@
 		    <thead>
 		        <tr>
 		            <th style="width: 33%;" class="form-group">
-		            	<label class="control-label col-sm-4" for="startDate">Date range:</label>
+		            	<div class="col-sm-2">
+			            	<button class="btn btn-primary" data-bind="click: prevWeekClicked">&lt;</button>
+			            </div>
+		            	<label class="control-label col-sm-2" for="startDate">Week:</label>
 		            	<div class="col-sm-4">
-				            <input id="startDate" type="text" class="form-control datepicker" data-bind="value: startDate" />
+				            <input id="startDate" type="text" class="form-control datepicker" data-bind="value: startDate().format('DD-MM-YYYY')" />
 				        </div>
-			            <div class="col-sm-4">
-			            	<label class="toEndDateLabel control-label">to</label>
-		            		<input type="text" class="form-control" data-bind="value: endDate" readonly />
-		            	</div>
+		            	<div class="col-sm-2" style="float: right;">
+			            	<button class="btn btn-primary" data-bind="click: nextWeekClicked">&gt;</button>
+			            </div>
 		            </th>
 		            <th>Mon</th>
 		            <th>Tue</th>
@@ -74,14 +76,21 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 	<script src="/js/bootstrap-datepicker.js"></script>
+	<script src="/js/moment.min.js"></script>
 
     <script type="text/javascript">
     (function() {
 
+        var startDatePicker = $('.datepicker').datepicker({
+        	autoclose: true,
+        	format: 'dd-mm-yyyy',
+        	weekStart: 1,
+        	calendarWeeks: true
+        });
+
         function ViewModel() {
             var self = this;
             self.startDate = ko.observable();
-            self.endDate = ko.observable();
             self.registrations = ko.observableArray();
 
             self.addProject = function() {
@@ -90,21 +99,34 @@
 
             self.save = function () {
                 var data = {
+                	startDate: self.startDate().toJSON(),
                     registrations: self.registrations()
                 };
                 $.post('/api/registrations', data);
             };
 
-            $.getJSON('/api/registrations/', function(result) {
-                self.registrations(result);
-            });
+            self.prevWeekClicked = function() {
+            	var prevWeek = self.startDate().subtract('days', 7);
+            	self.startDate(prevWeek);
+            };
+
+            self.nextWeekClicked = function() {
+            	var prevWeek = self.startDate().add('days', 7);
+            	self.startDate(prevWeek);
+            };
+
+            self.startDate.subscribe(function(date) {
+	            $.getJSON('/api/registrations?date=' + date.toJSON(),
+	            	function(result) {
+    	            	self.registrations(result);
+        	    	});
+	        });
+
+	        self.startDate(moment().startOf('week'));
         };
 
-        ko.applyBindings(new ViewModel());
-
-        $('.datepicker').datepicker({
-        	autoclose: true
-        });
+        var vm = new ViewModel();
+        ko.applyBindings(vm);
 
     })();
 	</script>
