@@ -81,13 +81,6 @@
     <script type="text/javascript">
     (function() {
 
-        var startDatePicker = $('.datepicker').datepicker({
-        	autoclose: true,
-        	format: 'dd-mm-yyyy',
-        	weekStart: 1,
-        	calendarWeeks: true
-        });
-
         function ViewModel() {
             var self = this;
             self.startDate = ko.observable();
@@ -124,9 +117,18 @@
 
 	        self.startDate(moment().startOf('isoweek'));
         };
-
         var vm = new ViewModel();
         ko.applyBindings(vm);
+
+        var startDatePicker = $('.datepicker').datepicker({
+        	autoclose: true,
+        	format: 'dd-mm-yyyy',
+        	weekStart: 1,
+        	calendarWeeks: true
+        })
+        .on('changeDate', function(e) {
+        	vm.startDate(moment(e.date));
+        });
 
     })();
 	</script>
